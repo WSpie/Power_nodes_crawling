@@ -1,5 +1,5 @@
 import time
-import os
+import os, sys
 from PIL import Image
 import re
 import unittest
@@ -87,6 +87,7 @@ def load_and_relocate(driver):
     WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CLASS_NAME, 'jss56')))
     ops.report(logger)
     # relocate to top left
+    search_cnt = 0
     while True:
         try:
             time.sleep(1)
@@ -94,6 +95,11 @@ def load_and_relocate(driver):
             ops.press_key(key_dict['left'])
             ops.report(logger)
             driver.save_screenshot('capture_start.png')
+            search_cnt += 1
+            if search_cnt > 10:
+                print('Error relocated, end driver')
+                driver.close()
+                sys.exit(0)
         except:
             print('Relocated')
             break
